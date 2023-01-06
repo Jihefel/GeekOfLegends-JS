@@ -1,5 +1,3 @@
-import { randomMana, randomArrows } from "./functions.js";
-
 
 export class Personnages {
     constructor(nom, pv, ad) {
@@ -14,16 +12,16 @@ export class Boss extends Personnages {
         super(nom, pv, ad);
         this.enigme = () => {
             if (this.pv <= (this.pv*0.2)) {
-
+                randomEnigme()
             }
         }
   }
 }
 
 export class Guerriers extends Personnages {
-    constructor(nom, pv, ad) {
+    constructor(nom, pv, ad, rage) {
         super(nom, pv, ad);
-        this.rage = 0;
+        this.rage = rage;
         this.defense = () => {}
         this.attaque = () => {}
     }
@@ -31,18 +29,18 @@ export class Guerriers extends Personnages {
 
 
 export class Mages extends Personnages {
-    constructor(nom, pv, ad) {
+    constructor(nom, pv, ad, mana) {
         super(nom, pv, ad);
-        this.mana = randomMana();
+        this.mana = mana;
         this.defense = () => {}
         this.attaque = () => {}
     }
 }
 
 export class Archers extends Personnages {
-    constructor(nom, pv, ad) {
+    constructor(nom, pv, ad, arrows) {
         super(nom, pv, ad);
-        this.arrows = randomArrows(7,11);
+        this.arrows = arrows;
         this.defense = () => {}
         this.attaque = () => {}
     }
