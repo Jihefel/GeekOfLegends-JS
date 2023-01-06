@@ -7,8 +7,8 @@ export let father = new classes.Boss ("Father", 1000, 350);
 export let dio = new classes.Boss ("Dio", 1500, 500);
 
 // Instance de Guerrier
-export let guerrier = new classes.Guerriers ("", 0, 0, 0);
+export let guerrier = new classes.Guerrier ("", 0, 0, 0);
 // Instance de Mage
-export let mage = new classes.Mages ("", 0, 0, randomMana())
+export let mage = new classes.Mage ("", 0, 0, randomMana())
 // Instance de Archers
-export let archer = new classes.Archers ("", 0, 0, randomArrows(7,11))
+export let archer = new classes.Archer ("", 0, 0, randomArrows(7,11))

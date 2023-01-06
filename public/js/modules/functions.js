@@ -1,7 +1,45 @@
 import * as Instances from "./instances.js";
-// console.log(venom);
 
-let random = Math.floor(Math.random()*3) /* 3 = boss.length ou manaPossibles.length ou enigmesPrompt.length*/
+// Attribution des noms aux héros
+export function namesHeroes() {
+    // Nom du Guerrier
+    let nomGuerrier = prompt(`Quel est le nom de votre ${"guerrier".toUpperCase()} ?`)
+    // Tant que le prompt est vide ou que l'utilisateur essaye de l'esquiver :
+    while (nomGuerrier == "" || nomGuerrier === null) {
+        nomGuerrier = prompt(`Quel est le nom de votre ${"guerrier".toUpperCase()} ?`)
+    }
+    Instances.guerrier.nom = (nomGuerrier.charAt(0).toUpperCase() + nomGuerrier.substring(1));
+    // Nom du Mage
+    let nomMage = prompt(`Quel est le nom de votre ${"mage".toLocaleUpperCase()} ?`)
+    while (nomMage == "" || nomMage === null) {
+        nomMage = prompt(`Quel est le nom de votre ${"mage".toLocaleUpperCase()} ?`)
+    }
+    Instances.mage.nom = (nomMage.charAt(0).toUpperCase() + nomMage.substring(1));
+    // Nom de l'archer
+    let nomArcher = prompt(`Quel est le nom de votre ${"archer".toLocaleUpperCase()} ?`);
+    while (nomArcher == "" || nomArcher === null) {
+        nomArcher = prompt(`Quel est le nom de votre ${"archer".toLocaleUpperCase()} ?`);
+    }
+    Instances.archer.nom = (nomArcher.charAt(0).toUpperCase() + nomArcher.substring(1));
+}
+
+// Methode defense des héros
+export function defenseAction() {
+    this.ad *= 0.5;
+    this.pv *= 2.5;
+    // Chances d'être attaqué *2 
+}
+
+// Méthode attaque des héros
+export function attaqueAction() {
+    this.ad *= 1.4;
+    this.pv *= 0.75;
+}
+
+let random = Math.floor(Math.random()*3)
+// 3 = boss.length ou manaPossibles.length
+let randomQuestion = Math.floor(Math.random()*5)
+// 5 = enigmesPrompts.length
 
 // Boss random
 export function randomBoss() {

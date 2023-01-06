@@ -1,3 +1,4 @@
+import { defenseAction,attaqueAction } from "./functions.js";
 
 export class Personnages {
     constructor(nom, pv, ad) {
@@ -18,30 +19,30 @@ export class Boss extends Personnages {
   }
 }
 
-export class Guerriers extends Personnages {
+export class Guerrier extends Personnages {
     constructor(nom, pv, ad, rage) {
         super(nom, pv, ad);
         this.rage = rage;
-        this.defense = () => {}
-        this.attaque = () => {}
+        this.defense = () => {defenseAction()}
+        this.attaque = () => {attaqueAction()}
     }
 }
 
 
-export class Mages extends Personnages {
+export class Mage extends Personnages {
     constructor(nom, pv, ad, mana) {
         super(nom, pv, ad);
         this.mana = mana;
-        this.defense = () => {}
-        this.attaque = () => {}
+        this.defense = () => {defenseAction()}
+        this.attaque = () => {attaqueAction()}
     }
 }
 
-export class Archers extends Personnages {
+export class Archer extends Personnages {
     constructor(nom, pv, ad, arrows) {
         super(nom, pv, ad);
         this.arrows = arrows;
-        this.defense = () => {}
-        this.attaque = () => {}
+        this.defense = () => {defenseAction()}
+        this.attaque = () => {attaqueAction()}
     }
 }
