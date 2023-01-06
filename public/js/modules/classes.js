@@ -12,9 +12,7 @@ export class Boss extends Personnages {
     constructor(nom, pv, ad) {
         super(nom, pv, ad);
         this.enigme = () => {
-            if (this.pv <= (this.pv*0.2)) {
                 randomEnigme()
-            }
         }
   }
 }

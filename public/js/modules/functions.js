@@ -63,7 +63,7 @@ export function randomArrows(min, max) {
 // Enigmes aléatoires
 export function randomEnigme(bossChoisi) {
     // Boss en dessous de 20% de pv
-    // if (bossChoisi.pv <= (bossChoisi.pv)*0.2) {
+    if (bossChoisi.pv <= (bossChoisi.pv)*0.2) {
         // Enigmes possibles
         let enigmesPrompt = [`Que vaut le résultat des index 2,5,3,8,7 du mot "refluates"`, `Je transforme une plante en une planète. Qui suis-je ?`, `Un père et son fils ont 36 ans à eux deux. Le père a 30 ans de plus que son fils. Quel est l'âge du père ?`, `Quand je suis frais, je suis chaud. Qui suis-je ?`, `Que signifie "avoir 192 poule?" ${`Attention, il n'y pas de "s" à poule`.toUpperCase()}`]
         // Réponses aux énigmes
@@ -98,4 +98,4 @@ export function randomEnigme(bossChoisi) {
             console.log("Vous avez échoué. Tous vos héros sont morts");
         }
     }
-// }
+}
