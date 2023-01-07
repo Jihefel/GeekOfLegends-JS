@@ -43,12 +43,12 @@ export function namesHeroes() {
 }
 
 // Instructions de base + création balise pour message de dépassement du max des points attribuables
+let h4 = document.createElement("h4");
+let message = document.createElement("p");
 function insertHtml() {
-  let h4 = document.createElement("h4");
   document.body.prepend(h4);
-  h4.innerHTML = `Répartissez 500 points entre les PV et l'AD de vos persos`;
+  h4.innerHTML = `Répartissez 300 points entre les PV et l'AD de vos persos`;
   // Message de dépassement
-  let message = document.createElement("p");
   message.setAttribute("id", "message");
   document.body.appendChild(message);
 }
@@ -104,7 +104,7 @@ export function combat(hero) {
   createElements(hero);
 
   //  Le total des attributs ne doit jamais dépasser total_attributs, il commence à 0
-  let total_attributs = 500;
+  let total_attributs = 300;
   let total = 0;
 
   // Mise à jour du total
@@ -202,7 +202,8 @@ export function combat(hero) {
           console.log(
             `${Instances.archer.nom} : PV:${Instances.archer.pv}, AD: ${Instances.archer.ad}, Flèches:${Instances.archer.arrows}`
           );
-          document.body.style.display = "none";
+          h4.style.display = "none";
+          message.style.display = "none";
           // COMBAT
           affrontement();
         }
@@ -235,7 +236,8 @@ export function combat(hero) {
           console.log(
             `${Instances.archer.nom} : PV:${Instances.archer.pv}, AD: ${Instances.archer.ad}, Flèches:${Instances.archer.arrows}`
           );
-          document.body.style.display = "none";
+          h4.style.display = "none";
+          message.style.display = "none";
           // COMBAT
           affrontement();
         }
@@ -269,7 +271,8 @@ export function combat(hero) {
           console.log(
             `${Instances.archer.nom} : PV:${Instances.archer.pv}, AD: ${Instances.archer.ad}, Flèches:${Instances.archer.arrows}`
           );
-          document.body.style.display = "none";
+          h4.style.display = "none";
+          message.style.display = "none";
           // COMBAT
           affrontement();
         }
@@ -280,25 +283,49 @@ export function combat(hero) {
 }
 
 export function affrontement() {
-  confirm("Bienvenue dans la faille de l'invocateur");
+  alert("Bienvenue dans la faille de l'invocateur");
   randomBoss();
+  postureGuerrier()
+  alert("Sélectionner une posture pour chacun de vos héros")
 }
+export function postureGuerrier() {
+  document.getElementById("select").style.display = "block";
+  document.getElementById("label_posture_guerrier").innerText = `Posture de ${Instances.guerrier.nom}`
+  const selPostureGuerrier = document.getElementById("post_g")
 
-export function postureGuerrier(hero) {
-  
+  let postureChanged = false;
+  selPostureGuerrier.addEventListener('change', (event) => {
+    if (postureChanged) {
+      // ignore l'événement si la posture a déjà été changée
+      return;
+    }
+    postureChanged = true;
+    if (event.target.value == "attaque") {
+      attaqueAction(Instances.guerrier)
+      console.log(`${Instances.guerrier.nom} adopte la posture d'attaque pour ce tour`);
+      console.log(Instances.guerrier);
+    } else if (event.target.value == "defense") {
+      defenseAction(Instances.guerrier)
+      console.log(`${Instances.guerrier.nom} adopte la posture défensive pour ce tour`);
+      console.log(Instances.guerrier);
+    } else {
+      console.log(`${Instances.guerrier.nom} n'adopte pas de posture pour ce tour`);
+      console.log(Instances.guerrier);
+    }
+  }); 
 }
 
 // Methode defense des héros
-export function defenseAction() {
-  this.ad *= 0.5;
-  this.pv *= 2.5;
+export function defenseAction(hero) {
+  hero.ad *= 0.5;
+  hero.pv *= 2.5;
   // Chances d'être attaqué *2
 }
 
 // Méthode attaque des héros
-export function attaqueAction() {
-  this.ad *= 1.4;
-  this.pv *= 0.75;
+export function attaqueAction(hero) {
+  hero.ad *= 1.4;
+  hero.pv *= 0.75;
 }
 
 let random = Math.floor(Math.random() * 3);

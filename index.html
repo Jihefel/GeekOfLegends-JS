@@ -12,18 +12,24 @@
     <section id="pv"></section>
     <br>
     <section id="ad"></section>
-    <section id="select">
-        <select>
-            <option value="0">YES</option>
-            <option value="1">NO</option>
-            <option value="2">IGNORE</option>
-           </select>
-        
-           <select>
-            <option value="0">YES</option>
-            <option value="1">NO</option>
-            <option value="2">IGNORE</option>
-           </select>
+    <section id="select" style="display: none;">
+        <label for="post_g" id="label_posture_guerrier"></label>
+        <select name="guerrier" id="post_g">
+            <option value=""></option>
+            <option value="attaque">Attaque</option>
+            <option value="defense">Défense</option>
+            <option value="normal">Normal</option>
+        </select>
+        <select name="mage">
+            <option value="attaque">Attaque</option>
+            <option value="defense">Défense</option>
+            <option value="normal">Normal</option>
+        </select>
+        <select name="archer">
+            <option value="attaque">Attaque</option>
+            <option value="defense">Défense</option>
+            <option value="normal">Normal</option>
+        </select>
     </section>
 </body>
 <script src="./public/js/main.js" type="module"></script>
