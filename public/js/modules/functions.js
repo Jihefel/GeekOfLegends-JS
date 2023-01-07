@@ -285,9 +285,16 @@ export function combat(hero) {
 export function affrontement() {
   alert("Bienvenue dans la faille de l'invocateur");
   randomBoss();
-  postureGuerrier()
   alert("Sélectionner une posture pour chacun de vos héros")
+  tour()
 }
+
+export function tour() {
+  postureGuerrier()
+  postureMage()
+  postureArcher()
+}
+
 export function postureGuerrier() {
   document.getElementById("select").style.display = "block";
   document.getElementById("label_posture_guerrier").innerText = `Posture de ${Instances.guerrier.nom}`
@@ -311,6 +318,58 @@ export function postureGuerrier() {
     } else {
       console.log(`${Instances.guerrier.nom} n'adopte pas de posture pour ce tour`);
       console.log(Instances.guerrier);
+    }
+  }); 
+}
+
+export function postureMage() {
+  document.getElementById("label_posture_mage").innerText = `Posture de ${Instances.mage.nom}`
+  const selPostureMage = document.getElementById("post_m")
+
+  let postureChanged = false;
+  selPostureMage.addEventListener('change', (event) => {
+    if (postureChanged) {
+      // ignore l'événement si la posture a déjà été changée
+      return;
+    }
+    postureChanged = true;
+    if (event.target.value == "attaque") {
+      attaqueAction(Instances.mage)
+      console.log(`${Instances.mage.nom} adopte la posture d'attaque pour ce tour`);
+      console.log(Instances.mage);
+    } else if (event.target.value == "defense") {
+      defenseAction(Instances.mage)
+      console.log(`${Instances.mage.nom} adopte la posture défensive pour ce tour`);
+      console.log(Instances.mage);
+    } else {
+      console.log(`${Instances.mage.nom} n'adopte pas de posture pour ce tour`);
+      console.log(Instances.mage);
+    }
+  }); 
+}
+
+export function postureArcher() {
+  document.getElementById("label_posture_archer").innerText = `Posture de ${Instances.archer.nom}`
+  const selPostureArcher = document.getElementById("post_a")
+
+  let postureChanged = false;
+  selPostureArcher.addEventListener('change', (event) => {
+    if (postureChanged) {
+      // ignore l'événement si la posture a déjà été changée
+      return;
+    }
+    postureChanged = true;
+    if (event.target.value == "attaque") {
+      attaqueAction(Instances.archer)
+      console.log(`${Instances.archer.nom} adopte la posture d'attaque pour ce tour`);
+      console.log(Instances.archer);
+    } else if (event.target.value == "defense") {
+      defenseAction(Instances.archer)
+      console.log(`${Instances.archer.nom} adopte la posture défensive pour ce tour`);
+      console.log(Instances.archer);
+    } else {
+      console.log(`${Instances.archer.nom} n'adopte pas de posture pour ce tour`);
+      console.log(Instances.archer);
     }
   }); 
 }
