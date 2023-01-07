@@ -15,7 +15,7 @@ export function namesHeroes() {
   Instances.guerrier.nom =
     nomGuerrier.charAt(0).toUpperCase() +
     nomGuerrier.substring(1).toLowerCase();
-  console.log(`Le guerrier ${Instances.guerrier.nom} prend part au combat`);
+  console.warn(`Le guerrier ${Instances.guerrier.nom} prend part au combat`);
   // Nom du Mage
   let nomMage = prompt(
     `Quel est le nom de votre ${"mage".toLocaleUpperCase()} ?`
@@ -27,7 +27,7 @@ export function namesHeroes() {
   }
   Instances.mage.nom =
     nomMage.charAt(0).toUpperCase() + nomMage.substring(1).toLowerCase();
-  console.log(`Le mage ${Instances.mage.nom} prend part au combat`);
+  console.warn(`Le mage ${Instances.mage.nom} prend part au combat`);
   // Nom de l'archer
   let nomArcher = prompt(
     `Quel est le nom de votre ${"archer".toLocaleUpperCase()} ?`
@@ -39,7 +39,18 @@ export function namesHeroes() {
   }
   Instances.archer.nom =
     nomArcher.charAt(0).toUpperCase() + nomArcher.substring(1).toLowerCase();
-  console.log(`L'archer ${Instances.archer.nom} prend part au combat`);
+  console.warn(`L'archer ${Instances.archer.nom} prend part au combat`);
+}
+
+// Instructions de base + création balise pour message de dépassement du max des points attribuables
+function insertHtml() {
+  let h4 = document.createElement("h4");
+  document.body.prepend(h4);
+  h4.innerHTML = `Répartissez 500 points entre les PV et l'AD de vos persos`;
+  // Message de dépassement
+  let message = document.createElement("p");
+  message.setAttribute("id", "message");
+  document.body.appendChild(message);
 }
 
 // Attribution des pv et ad par l'utilisateur
@@ -50,6 +61,13 @@ export function pv_AD(hero) {
   let input_numberAD = document.createElement("input");
   let labelPV = document.createElement("label");
   let labelAD = document.createElement("label");
+  let boutonContinue = document.createElement("button");
+  // Bouton continuer
+  boutonContinue.innerText = `Valider les attributs pour ${hero.nom}`;
+  boutonContinue.setAttribute("id", `boutonContinue-${hero.nom}`);
+  boutonContinue.style.display = "none";
+  document.body.appendChild(boutonContinue);
+
   function pvADHeros(hero) {
     // PV
     input_numberPV.setAttribute("type", "number");
@@ -57,8 +75,11 @@ export function pv_AD(hero) {
     input_numberPV.setAttribute("name", `PV de ${hero.nom}`);
     input_numberPV.setAttribute("placeholder", `PV de ${hero.nom}`);
     input_numberPV.setAttribute("min", "10");
+    input_numberPV.setAttribute("max", "490");
     input_numberPV.setAttribute("step", "10");
+    input_numberPV.setAttribute("style", "width:8%;display:inline");
     labelPV.setAttribute("for", `PV de ${hero.nom}`);
+    labelPV.setAttribute("id", `PV de ${hero.nom}`);
     labelPV.innerText = `      PV de ${hero.nom} : `;
     // AD
     input_numberAD.setAttribute("type", "number");
@@ -66,22 +87,16 @@ export function pv_AD(hero) {
     input_numberAD.setAttribute("name", `AD de ${hero.nom}`);
     input_numberAD.setAttribute("placeholder", `AD de ${hero.nom}`);
     input_numberAD.setAttribute("min", "10");
+    input_numberAD.setAttribute("max", "490");
     input_numberAD.setAttribute("step", "10");
+    input_numberAD.setAttribute("style", "width:8%;display:inline");
     labelAD.setAttribute("for", `AD de ${hero.nom}`);
+    labelAD.setAttribute("id", `AD de ${hero.nom}`);
     labelAD.innerText = `      AD de ${hero.nom} : `;
   }
   // Appel du début de la fonction pour établir un label et un input pour chaque classe de hero passée en paramètre
   pvADHeros(hero);
 
-  // Instructions de base + création balise pour message de dépassement du max des points attribuables
-  if (hero == Instances.archer) {
-    let h4 = document.createElement("h4");
-    document.body.prepend(h4);
-    h4.innerHTML = `Répartissez ${total_attributs} points entre les PV et l'AD de vos persos`;
-    let message = document.createElement("p");
-    message.setAttribute("id", "message");
-    document.body.appendChild(message);
-  }
   // Ecriture des labels et inputs dans l'HTML
   document.getElementById("pv").appendChild(labelPV);
   document.getElementById("pv").appendChild(input_numberPV);
@@ -91,26 +106,34 @@ export function pv_AD(hero) {
   //  Le total des attributs ne doit jamais dépasser total_attributs, il commence à 0
   let total = 0;
 
-  // Mise à jour du total 
+  // Mise à jour du total
   function updateTotal() {
     // Total = AD + PV du perso
     total = Number(input_numberPV.value) + Number(input_numberAD.value);
     // Message d'erreur si le total dépasse les 500 max
     if (total > total_attributs) {
       message.innerText = `Le total des attributs de ${hero.nom} ne doit pas dépasser ${total_attributs}.`;
-      // Si dépasse 500, la valeur de l'ad agit sur la valeur des PV et vice-versa, empêchant de dépasser
+      // Si dépasse 500, la valeur des PV agit sur la valeur de l'AD, empêchant de dépasser
       input_numberAD.value = total_attributs - Number(input_numberPV.value);
+    } else if (total * 3 === total_attributs * 3) {
+      boutonContinue.style.display = "block";
+    } else if (total * 3 < total_attributs * 3) {
+      // Si pas de dépassement, ne rien afficher dans la balise p du message
+      message.innerText = "";
+      boutonContinue.style.display = "none";
     } else {
       // Si pas de dépassement, ne rien afficher dans la balise p du message
       message.innerText = "";
+      boutonContinue.style.display = "none";
     }
   }
-// Lecture de la valeur de l'input des PV et met à jour les valeurs pour la vérification du dépassement
-input_numberPV.addEventListener("input", function () {
-  updateTotal();
-});
 
-// Lecture de la valeur de l'input de l'AD et met à jour les valeurs pour la vérification du dépassement
+  // Lecture de la valeur de l'input des PV et met à jour les valeurs pour la vérification du dépassement
+  input_numberPV.addEventListener("input", function () {
+    updateTotal();
+  });
+
+  // Lecture de la valeur de l'input de l'AD et met à jour les valeurs pour la vérification du dépassement
   input_numberAD.addEventListener("input", function () {
     updateTotal();
   });
@@ -121,34 +144,58 @@ input_numberPV.addEventListener("input", function () {
     // Récupération de la partie de l'ID de l'input avant le - => soit PV soit AD
     const attribut = inputId.split("-")[0];
 
-    // Récupération de l'héro à partir du nom de sa classe mis en paramètre
-    switch (hero) {
-      case Instances.guerrier:
-        hero = Instances.guerrier;
-        break;
-      case Instances.mage:
-        hero = Instances.mage;
-        break;
-      case Instances.archer:
-        hero = Instances.archer;
-        break;
-    }
-
     // Mise à jour de l'ad ou des pv en fonction de l'attribut
     switch (attribut) {
       case "PV":
         hero.pv = event.target.value;
         console.log(`Le montant des PV de ${hero.nom} est fixé à ${hero.pv}`);
         break;
-        case "AD":
-          hero.ad = event.target.value;
-          console.log(`Le montant des dégats d'attaque de ${hero.nom} est fixé à ${hero.ad}`);
+      case "AD":
+        hero.ad = event.target.value;
+        console.log(
+          `Le montant des dégats d'attaque de ${hero.nom} est fixé à ${hero.ad}`
+        );
         break;
     }
   }
   // Le montant de l'input est mis à jour à chaque modification
   input_numberPV.addEventListener("change", updateHeroAttribute);
   input_numberAD.addEventListener("change", updateHeroAttribute);
+
+  // Lors du clic des boutons, l'attribution disparait et si le dernier est cliqué, le combat commence
+  let bouton1 = document.getElementById(`boutonContinue-${Instances.guerrier.nom}`)
+  let bouton1Clicked = false;
+  let bouton2 = document.getElementById(`boutonContinue-${Instances.mage.nom}`)
+  let bouton2Clicked = false;
+  let bouton3 = document.getElementById(`boutonContinue-${Instances.archer.nom}`)
+  let bouton3Clicked = false;
+  // Bouton pour guerrier
+  bouton1.addEventListener("click", () => {
+    document.getElementById(`PV-${Instances.guerrier.nom}`).style.display = "none";
+    document.getElementById(`AD-${Instances.guerrier.nom}`).style.display = "none";
+    document.getElementById(`PV de ${Instances.guerrier.nom}`).style.display = "none";
+    document.getElementById(`AD de ${Instances.guerrier.nom}`).style.display = "none";
+    bouton1.style.display = "none"
+    bouton1Clicked = true;
+  })
+  // Bouton pour mage
+  bouton2.addEventListener("click", () => {
+    document.getElementById(`PV-${Instances.mage.nom}`).style.display = "none";
+    document.getElementById(`AD-${Instances.mage.nom}`).style.display = "none";
+    document.getElementById(`PV de ${Instances.mage.nom}`).style.display = "none";
+    document.getElementById(`AD de ${Instances.mage.nom}`).style.display = "none";
+    bouton2.style.display = "none"
+    bouton2Clicked = true;
+  })
+  // Bouton pour archer
+  bouton3.addEventListener("click", () => {
+    document.getElementById(`PV-${Instances.archer.nom}`).style.display = "none";
+    document.getElementById(`AD-${Instances.archer.nom}`).style.display = "none";
+    document.getElementById(`PV de ${Instances.archer.nom}`).style.display = "none";
+    document.getElementById(`AD de ${Instances.archer.nom}`).style.display = "none";
+    bouton3.style.display = "none"
+    bouton3Clicked = true;
+  })
 }
 
 // Methode defense des héros
@@ -185,7 +232,7 @@ export function randomMana() {
 
 // Nombre de flèches aléatoires
 export function randomArrows(min, max) {
-  return Math.random() * (max - min) + min;
+  return Math.floor(Math.random() * (max - min) + min);
 }
 
 // Enigmes aléatoires
@@ -241,4 +288,20 @@ export function randomEnigme(bossChoisi) {
       console.log("Vous avez échoué. Tous vos héros sont morts");
     }
   }
+}
+
+/* ****** DEROULEMENT DU COMBAT ********* */
+export function combat() {
+  // Nom des héros
+  namesHeroes();
+  // Insertion balises HTML
+  insertHtml();
+  // PV et AD des héros
+  pv_AD(Instances.guerrier);
+  pv_AD(Instances.mage);
+  pv_AD(Instances.archer);
+  // Affichages des stats des héros
+  // console.log(`${Instances.guerrier.nom} : PV:${Instances.guerrier.pv}, AD:${Instances.guerrier.ad}, Rage:${Instances.guerrier.rage}`);
+  // console.log(`${Instances.mage.nom} : PV:${Instances.mage.pv}, AD:${Instances.mage.ad}, Mana:${Instances.mage.mana}`);
+  // console.log(`${Instances.archer.nom} : PV:${Instances.archer.pv}, AD: ${Instances.archer.ad}, Flèches:${Instances.archer.arrows}`);
 }

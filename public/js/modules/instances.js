@@ -1,4 +1,5 @@
 import * as classes from "./classes.js";
+
 import { randomMana, randomArrows } from "./functions.js";
 
 // Instances de Boss
