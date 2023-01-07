@@ -23,6 +23,33 @@ export function namesHeroes() {
     Instances.archer.nom = (nomArcher.charAt(0).toUpperCase() + nomArcher.substring(1));
 }
 
+// Attribution des pv et ad par l'utilisateur
+export function pv_AD(hero) {
+    let total_attributs = 1500;
+    // Pour créer un input range dans l'HTML pour saisir les attributs
+    let input_rangePV = document.createElement("input");
+    let input_rangeAD = document.createElement("input");
+    let labelPV = document.createElement("label");
+    let labelAD = document.createElement("label");
+    function pvADHeros(hero) {
+        // PV
+        input_rangePV.setAttribute("type", "number")
+        input_rangePV.setAttribute("name", `PV de ${hero.nom}`);
+        labelPV.setAttribute("for", `PV de ${hero.nom}`)
+        labelPV.innerText = `PV de ${hero.nom} : `
+        // AD
+        input_rangeAD.setAttribute("type", "number")
+        input_rangeAD.setAttribute("name", `AD de ${hero.nom}`);
+        labelAD.setAttribute("for", `AD de ${hero.nom}`)
+        labelAD.innerText = `AD de ${hero.nom} : `
+    }
+    pvADHeros(hero)
+    document.getElementById("pv").appendChild(labelPV)
+    document.getElementById("pv").appendChild(input_rangePV)
+    document.getElementById("ad").appendChild(labelAD)
+    document.getElementById("ad").appendChild(input_rangeAD)
+}
+
 // Methode defense des héros
 export function defenseAction() {
     this.ad *= 0.5;
