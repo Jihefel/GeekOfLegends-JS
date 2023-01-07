@@ -54,21 +54,22 @@ function insertHtml() {
 }
 
 // Attribution des pv et ad par l'utilisateur
-export function pv_AD(hero) {
-  let total_attributs = 500;
-  // Pour créer un input range dans l'HTML pour saisir les attributs
+export function combat(hero) {
+
+  // Pour créer un input number dans l'HTML pour saisir les attributs
   let input_numberPV = document.createElement("input");
   let input_numberAD = document.createElement("input");
   let labelPV = document.createElement("label");
   let labelAD = document.createElement("label");
   let boutonContinue = document.createElement("button");
-  // Bouton continuer
-  boutonContinue.innerText = `Valider les attributs pour ${hero.nom}`;
-  boutonContinue.setAttribute("id", `boutonContinue-${hero.nom}`);
-  boutonContinue.style.display = "none";
-  document.body.appendChild(boutonContinue);
 
-  function pvADHeros(hero) {
+  function createElements(hero) {
+    // Bouton continuer
+    boutonContinue.innerText = `Valider les attributs pour ${hero.nom}`;
+    boutonContinue.setAttribute("id", `boutonContinue-${hero.nom}`);
+    boutonContinue.style.display = "none";
+    document.body.appendChild(boutonContinue);
+
     // PV
     input_numberPV.setAttribute("type", "number");
     input_numberPV.setAttribute("id", `PV-${hero.nom}`);
@@ -93,17 +94,17 @@ export function pv_AD(hero) {
     labelAD.setAttribute("for", `AD de ${hero.nom}`);
     labelAD.setAttribute("id", `AD de ${hero.nom}`);
     labelAD.innerText = `      AD de ${hero.nom} : `;
+    // Ecriture des labels et inputs dans l'HTML
+    document.getElementById("pv").appendChild(labelPV);
+    document.getElementById("pv").appendChild(input_numberPV);
+    document.getElementById("ad").appendChild(labelAD);
+    document.getElementById("ad").appendChild(input_numberAD);
   }
   // Appel du début de la fonction pour établir un label et un input pour chaque classe de hero passée en paramètre
-  pvADHeros(hero);
-
-  // Ecriture des labels et inputs dans l'HTML
-  document.getElementById("pv").appendChild(labelPV);
-  document.getElementById("pv").appendChild(input_numberPV);
-  document.getElementById("ad").appendChild(labelAD);
-  document.getElementById("ad").appendChild(input_numberAD);
+  createElements(hero);
 
   //  Le total des attributs ne doit jamais dépasser total_attributs, il commence à 0
+  let total_attributs = 500;
   let total = 0;
 
   // Mise à jour du total
@@ -148,13 +149,9 @@ export function pv_AD(hero) {
     switch (attribut) {
       case "PV":
         hero.pv = event.target.value;
-        console.log(`Le montant des PV de ${hero.nom} est fixé à ${hero.pv}`);
         break;
       case "AD":
         hero.ad = event.target.value;
-        console.log(
-          `Le montant des dégats d'attaque de ${hero.nom} est fixé à ${hero.ad}`
-        );
         break;
     }
   }
@@ -162,40 +159,133 @@ export function pv_AD(hero) {
   input_numberPV.addEventListener("change", updateHeroAttribute);
   input_numberAD.addEventListener("change", updateHeroAttribute);
 
-  // Lors du clic des boutons, l'attribution disparait et si le dernier est cliqué, le combat commence
-  let bouton1 = document.getElementById(`boutonContinue-${Instances.guerrier.nom}`)
-  let bouton1Clicked = false;
-  let bouton2 = document.getElementById(`boutonContinue-${Instances.mage.nom}`)
-  let bouton2Clicked = false;
-  let bouton3 = document.getElementById(`boutonContinue-${Instances.archer.nom}`)
-  let bouton3Clicked = false;
-  // Bouton pour guerrier
-  bouton1.addEventListener("click", () => {
-    document.getElementById(`PV-${Instances.guerrier.nom}`).style.display = "none";
-    document.getElementById(`AD-${Instances.guerrier.nom}`).style.display = "none";
-    document.getElementById(`PV de ${Instances.guerrier.nom}`).style.display = "none";
-    document.getElementById(`AD de ${Instances.guerrier.nom}`).style.display = "none";
-    bouton1.style.display = "none"
-    bouton1Clicked = true;
-  })
-  // Bouton pour mage
-  bouton2.addEventListener("click", () => {
-    document.getElementById(`PV-${Instances.mage.nom}`).style.display = "none";
-    document.getElementById(`AD-${Instances.mage.nom}`).style.display = "none";
-    document.getElementById(`PV de ${Instances.mage.nom}`).style.display = "none";
-    document.getElementById(`AD de ${Instances.mage.nom}`).style.display = "none";
-    bouton2.style.display = "none"
-    bouton2Clicked = true;
-  })
-  // Bouton pour archer
-  bouton3.addEventListener("click", () => {
-    document.getElementById(`PV-${Instances.archer.nom}`).style.display = "none";
-    document.getElementById(`AD-${Instances.archer.nom}`).style.display = "none";
-    document.getElementById(`PV de ${Instances.archer.nom}`).style.display = "none";
-    document.getElementById(`AD de ${Instances.archer.nom}`).style.display = "none";
-    bouton3.style.display = "none"
-    bouton3Clicked = true;
-  })
+  function prepCombat() {
+    // Lors du clic des boutons, l'attribution disparait et si le dernier est cliqué, le combat commence
+    let bouton1 = document.getElementById(
+      `boutonContinue-${Instances.guerrier.nom}`
+    );
+    let bouton2 = document.getElementById(
+      `boutonContinue-${Instances.mage.nom}`
+    );
+    let bouton3 = document.getElementById(
+      `boutonContinue-${Instances.archer.nom}`
+    );
+    let bouton1Clicked = false;
+    let bouton2Clicked = false;
+    let bouton3Clicked = false;
+    // Bouton pour guerrier
+    if (bouton1) {
+      bouton1.addEventListener("click", () => {
+        document.getElementById(`PV-${Instances.guerrier.nom}`).style.display =
+          "none";
+        document.getElementById(`AD-${Instances.guerrier.nom}`).style.display =
+          "none";
+        document.getElementById(
+          `PV de ${Instances.guerrier.nom}`
+        ).style.display = "none";
+        document.getElementById(
+          `AD de ${Instances.guerrier.nom}`
+        ).style.display = "none";
+        bouton1.style.display = "none";
+        bouton1Clicked = true;
+        if (
+          bouton1Clicked == true &&
+          bouton2Clicked == true &&
+          bouton3Clicked == true
+        ) {
+          console.log(
+            `${Instances.guerrier.nom} : PV:${Instances.guerrier.pv}, AD:${Instances.guerrier.ad}, Rage:${Instances.guerrier.rage}`
+          );
+          console.log(
+            `${Instances.mage.nom} : PV:${Instances.mage.pv}, AD:${Instances.mage.ad}, Mana:${Instances.mage.mana}`
+          );
+          console.log(
+            `${Instances.archer.nom} : PV:${Instances.archer.pv}, AD: ${Instances.archer.ad}, Flèches:${Instances.archer.arrows}`
+          );
+          document.body.style.display = "none";
+          // COMBAT
+          affrontement();
+        }
+      });
+    }
+    if (bouton2) {
+      // Bouton pour mage
+      bouton2.addEventListener("click", () => {
+        document.getElementById(`PV-${Instances.mage.nom}`).style.display =
+          "none";
+        document.getElementById(`AD-${Instances.mage.nom}`).style.display =
+          "none";
+        document.getElementById(`PV de ${Instances.mage.nom}`).style.display =
+          "none";
+        document.getElementById(`AD de ${Instances.mage.nom}`).style.display =
+          "none";
+        bouton2.style.display = "none";
+        bouton2Clicked = true;
+        if (
+          bouton1Clicked == true &&
+          bouton2Clicked == true &&
+          bouton3Clicked == true
+        ) {
+          console.log(
+            `${Instances.guerrier.nom} : PV:${Instances.guerrier.pv}, AD:${Instances.guerrier.ad}, Rage:${Instances.guerrier.rage}`
+          );
+          console.log(
+            `${Instances.mage.nom} : PV:${Instances.mage.pv}, AD:${Instances.mage.ad}, Mana:${Instances.mage.mana}`
+          );
+          console.log(
+            `${Instances.archer.nom} : PV:${Instances.archer.pv}, AD: ${Instances.archer.ad}, Flèches:${Instances.archer.arrows}`
+          );
+          document.body.style.display = "none";
+          // COMBAT
+          affrontement();
+        }
+      });
+    }
+    if (bouton3) {
+      // Bouton pour archer
+      bouton3.addEventListener("click", () => {
+        document.getElementById(`PV-${Instances.archer.nom}`).style.display =
+          "none";
+        document.getElementById(`AD-${Instances.archer.nom}`).style.display =
+          "none";
+        document.getElementById(`PV de ${Instances.archer.nom}`).style.display =
+          "none";
+        document.getElementById(`AD de ${Instances.archer.nom}`).style.display =
+          "none";
+        bouton3.style.display = "none";
+        bouton3Clicked = true;
+        // Si les 3 boutons ont été cliqué, afficher la suite
+        if (
+          bouton1Clicked == true &&
+          bouton2Clicked == true &&
+          bouton3Clicked == true
+        ) {
+          console.log(
+            `${Instances.guerrier.nom} : PV:${Instances.guerrier.pv}, AD:${Instances.guerrier.ad}, Rage:${Instances.guerrier.rage}`
+          );
+          console.log(
+            `${Instances.mage.nom} : PV:${Instances.mage.pv}, AD:${Instances.mage.ad}, Mana:${Instances.mage.mana}`
+          );
+          console.log(
+            `${Instances.archer.nom} : PV:${Instances.archer.pv}, AD: ${Instances.archer.ad}, Flèches:${Instances.archer.arrows}`
+          );
+          document.body.style.display = "none";
+          // COMBAT
+          affrontement();
+        }
+      });
+    }
+  }
+  prepCombat();
+}
+
+export function affrontement() {
+  confirm("Bienvenue dans la faille de l'invocateur");
+  randomBoss();
+}
+
+export function postureGuerrier(hero) {
+  
 }
 
 // Methode defense des héros
@@ -220,6 +310,9 @@ let randomQuestion = Math.floor(Math.random() * 5);
 export function randomBoss() {
   let boss = [Instances.venom, Instances.father, Instances.dio];
   let bossChoisi = boss[random];
+  console.warn(
+    `Le boss ${bossChoisi.nom} arrive dans l'arène ! PV:${bossChoisi.pv}, AD:${bossChoisi.ad}. Préparez-vous au combat !`
+  );
   return bossChoisi;
 }
 
@@ -291,17 +384,13 @@ export function randomEnigme(bossChoisi) {
 }
 
 /* ****** DEROULEMENT DU COMBAT ********* */
-export function combat() {
+export function deroulement() {
   // Nom des héros
   namesHeroes();
   // Insertion balises HTML
   insertHtml();
   // PV et AD des héros
-  pv_AD(Instances.guerrier);
-  pv_AD(Instances.mage);
-  pv_AD(Instances.archer);
-  // Affichages des stats des héros
-  // console.log(`${Instances.guerrier.nom} : PV:${Instances.guerrier.pv}, AD:${Instances.guerrier.ad}, Rage:${Instances.guerrier.rage}`);
-  // console.log(`${Instances.mage.nom} : PV:${Instances.mage.pv}, AD:${Instances.mage.ad}, Mana:${Instances.mage.mana}`);
-  // console.log(`${Instances.archer.nom} : PV:${Instances.archer.pv}, AD: ${Instances.archer.ad}, Flèches:${Instances.archer.arrows}`);
+  combat(Instances.guerrier);
+  combat(Instances.mage);
+  combat(Instances.archer);
 }
