@@ -1,4 +1,4 @@
-import { defenseAction,attaqueAction } from "./functions.js";
+import { defenseAction,attaqueAction, pvBoss } from "./functions.js";
 
 export class Personnages {
     constructor(nom, pv, ad) {
@@ -14,6 +14,7 @@ export class Boss extends Personnages {
         this.enigme = () => {
                 randomEnigme()
         }
+        pvBoss.push(this.pv);
   }
 }
 
