@@ -42,6 +42,46 @@ export function namesHeroes() {
   console.warn(`L'archer ${Instances.archer.nom} prend part au combat`);
 }
 
+// Methode defense des héros
+export function defenseAction(hero) {
+  hero.ad *= 0.5;
+  hero.pv *= 2.5;
+  // Chances d'être attaqué *2
+}
+
+// Méthode attaque des héros
+export function attaqueAction(hero) {
+  hero.ad *= 1.4;
+  hero.pv *= 0.75;
+}
+
+let random = Math.floor(Math.random() * 3);
+// 3 = boss.length ou manaPossibles.length
+let randomQuestion = Math.floor(Math.random() * 5);
+// 5 = enigmesPrompts.length
+
+// Boss random
+let bossChoisi
+export function randomBoss() {
+  let boss = [Instances.venom, Instances.father, Instances.dio];
+  bossChoisi = boss[random];
+  console.warn(
+    `Le boss ${bossChoisi.nom} arrive dans l'arène ! PV:${bossChoisi.pv}, AD:${bossChoisi.ad}. Préparez-vous au combat !`
+  );
+}
+
+// Mana possibles
+export function randomMana() {
+  let manaPossibles = [7, 9, 11];
+  let mana = manaPossibles[random];
+  return mana;
+}
+
+// Nombre de flèches aléatoires
+export function randomArrows(min, max) {
+  return Math.floor(Math.random() * (max - min) + min);
+}
+
 // Instructions de base + création balise pour message de dépassement du max des points attribuables
 let h4 = document.createElement("h4");
 let message = document.createElement("p");
@@ -53,9 +93,10 @@ function insertHtml() {
   document.body.appendChild(message);
 }
 
+let pvHeros = []
+let adHeros = []
 // Attribution des pv et ad par l'utilisateur
 export function combat(hero) {
-
   // Pour créer un input number dans l'HTML pour saisir les attributs
   let input_numberPV = document.createElement("input");
   let input_numberAD = document.createElement("input");
@@ -148,10 +189,12 @@ export function combat(hero) {
     // Mise à jour de l'ad ou des pv en fonction de l'attribut
     switch (attribut) {
       case "PV":
-        hero.pv = event.target.value;
+        hero.pv = parseInt(event.target.value);
+        pvHeros.push(hero.pv)
         break;
       case "AD":
-        hero.ad = event.target.value;
+        hero.ad = parseInt(event.target.value);
+        adHeros.push(hero.ad)
         break;
     }
   }
@@ -283,141 +326,131 @@ export function combat(hero) {
 }
 
 export function affrontement() {
-  alert("Bienvenue dans la faille de l'invocateur");
+  setTimeout(() => {
+    alert("Bienvenue dans la faille de l'invocateur");
+  }, 10);
   randomBoss();
-  alert("Sélectionner une posture pour chacun de vos héros")
-  tour()
+  console.log(bossChoisi);
+  toursCombat();
 }
 
-export function tour() {
-  postureGuerrier()
-  postureMage()
-  postureArcher()
+let tours = 0
+export function toursCombat() {
+  setTimeout(() => {
+    alert("Sélectionnez une posture pour chacun de vos héros");
+  }, 10);
+  postures();
 }
 
-export function postureGuerrier() {
-  document.getElementById("select").style.display = "block";
-  document.getElementById("label_posture_guerrier").innerText = `Posture de ${Instances.guerrier.nom}`
-  const selPostureGuerrier = document.getElementById("post_g")
+export function postures() {
+  // Guerrier
+    document.getElementById("select").style.display = "block";
+    document.getElementById(
+      "label_posture_guerrier"
+    ).innerText = `Posture de ${Instances.guerrier.nom}`;
+    const selPostureGuerrier = document.getElementById("post_g");
 
-  let postureChanged = false;
-  selPostureGuerrier.addEventListener('change', (event) => {
-    if (postureChanged) {
-      // ignore l'événement si la posture a déjà été changée
-      return;
-    }
-    postureChanged = true;
-    if (event.target.value == "attaque") {
-      attaqueAction(Instances.guerrier)
-      console.log(`${Instances.guerrier.nom} adopte la posture d'attaque pour ce tour`);
-      console.log(Instances.guerrier);
-    } else if (event.target.value == "defense") {
-      defenseAction(Instances.guerrier)
-      console.log(`${Instances.guerrier.nom} adopte la posture défensive pour ce tour`);
-      console.log(Instances.guerrier);
-    } else {
-      console.log(`${Instances.guerrier.nom} n'adopte pas de posture pour ce tour`);
-      console.log(Instances.guerrier);
-    }
-  }); 
+    let postureChanged1 = false;
+    selPostureGuerrier.addEventListener("change", (event) => {
+
+    if (postureChanged1) {
+        // ignore l'événement si la posture a déjà été changée
+        return;
+      }
+      postureChanged1 = true;
+      if (event.target.value == "attaque") {
+        attaqueAction(Instances.guerrier);
+        console.log(
+          `${Instances.guerrier.nom} adopte la posture d'attaque pour le tour ${tours+1}. Ses stats deviennent PV:${Instances.guerrier.pv}, AD:${Instances.guerrier.ad}`
+          );
+        } else if (event.target.value == "defense") {
+        defenseAction(Instances.guerrier);
+        console.log(
+          `${Instances.guerrier.nom} adopte la posture défensive pour le tour ${tours+1}. Ses stats deviennent PV:${Instances.guerrier.pv}, AD:${Instances.guerrier.ad}`
+          );
+        } else {
+          console.log(
+            `${Instances.guerrier.nom} n'adopte pas de posture pour le tour ${tours+1}. Ses stats restent inchangées.`
+            );
+          }
+        });
+        
+        // Mage
+        document.getElementById(
+          "label_posture_mage"
+          ).innerText = `Posture de ${Instances.mage.nom}`;
+          const selPostureMage = document.getElementById("post_m");
+          
+          let postureChanged2 = false;
+          selPostureMage.addEventListener("change", (event) => {
+            if (postureChanged2) {
+              // ignore l'événement si la posture a déjà été changée
+              return;
+      }
+      postureChanged2 = true;
+      if (event.target.value == "attaque") {
+        attaqueAction(Instances.mage);
+        console.log(
+          `${Instances.mage.nom} adopte la posture d'attaque pour le tour ${tours+1}. Ses stats deviennent PV:${Instances.mage.pv}, AD:${Instances.mage.ad}`
+          );
+        } else if (event.target.value == "defense") {
+          defenseAction(Instances.mage);
+          console.log(
+            `${Instances.mage.nom} adopte la posture défensive pour le tour ${tours+1}. Ses stats deviennent PV:${Instances.mage.pv}, AD:${Instances.mage.ad}`
+            );
+          } else {
+            console.log(
+              `${Instances.mage.nom} n'adopte pas de posture pour le tour ${tours+1}. Ses stats restent inchangées.`
+              );
+            }
+          });
+          
+    // Archer
+    document.getElementById(
+      "label_posture_archer"
+      ).innerText = `Posture de ${Instances.archer.nom}`;
+      const selPostureArcher = document.getElementById("post_a");
+      
+      let postureChanged3 = false;
+      selPostureArcher.addEventListener("change", (event) => {
+        if (postureChanged3) {
+          // ignore l'événement si la posture a déjà été changée
+          return;
+        }
+        postureChanged3 = true;
+
+        // Si les 3 postures sont sélectionnées, continuer
+        function posturesOK() {
+          if (postureChanged1 === true && postureChanged2 === true && postureChanged3 === true) {
+            // FONCTION DE POKE CHACUN SON TOUR
+            bagarre()
+          }
+        }
+      if (event.target.value == "attaque") {
+        attaqueAction(Instances.archer);
+        console.log(
+          `${Instances.archer.nom} adopte la posture d'attaque pour le tour ${tours+1}. Ses stats deviennent PV:${Instances.archer.pv}, AD:${Instances.archer.ad}`
+        );
+      } else if (event.target.value == "defense") {
+        defenseAction(Instances.archer);
+        console.log(
+          `${Instances.archer.nom} adopte la posture défensive pour le tour ${tours+1}. Ses stats deviennent PV:${Instances.archer.pv}, AD:${Instances.archer.ad}`
+        );
+      } else {
+        console.log(
+          `${Instances.archer.nom} n'adopte pas de posture pour le tour ${tours+1}. Ses stats restent inchangées.`
+        );
+      }
+      posturesOK()
+    });
 }
 
-export function postureMage() {
-  document.getElementById("label_posture_mage").innerText = `Posture de ${Instances.mage.nom}`
-  const selPostureMage = document.getElementById("post_m")
 
-  let postureChanged = false;
-  selPostureMage.addEventListener('change', (event) => {
-    if (postureChanged) {
-      // ignore l'événement si la posture a déjà été changée
-      return;
-    }
-    postureChanged = true;
-    if (event.target.value == "attaque") {
-      attaqueAction(Instances.mage)
-      console.log(`${Instances.mage.nom} adopte la posture d'attaque pour ce tour`);
-      console.log(Instances.mage);
-    } else if (event.target.value == "defense") {
-      defenseAction(Instances.mage)
-      console.log(`${Instances.mage.nom} adopte la posture défensive pour ce tour`);
-      console.log(Instances.mage);
-    } else {
-      console.log(`${Instances.mage.nom} n'adopte pas de posture pour ce tour`);
-      console.log(Instances.mage);
-    }
-  }); 
-}
-
-export function postureArcher() {
-  document.getElementById("label_posture_archer").innerText = `Posture de ${Instances.archer.nom}`
-  const selPostureArcher = document.getElementById("post_a")
-
-  let postureChanged = false;
-  selPostureArcher.addEventListener('change', (event) => {
-    if (postureChanged) {
-      // ignore l'événement si la posture a déjà été changée
-      return;
-    }
-    postureChanged = true;
-    if (event.target.value == "attaque") {
-      attaqueAction(Instances.archer)
-      console.log(`${Instances.archer.nom} adopte la posture d'attaque pour ce tour`);
-      console.log(Instances.archer);
-    } else if (event.target.value == "defense") {
-      defenseAction(Instances.archer)
-      console.log(`${Instances.archer.nom} adopte la posture défensive pour ce tour`);
-      console.log(Instances.archer);
-    } else {
-      console.log(`${Instances.archer.nom} n'adopte pas de posture pour ce tour`);
-      console.log(Instances.archer);
-    }
-  }); 
-}
-
-// Methode defense des héros
-export function defenseAction(hero) {
-  hero.ad *= 0.5;
-  hero.pv *= 2.5;
-  // Chances d'être attaqué *2
-}
-
-// Méthode attaque des héros
-export function attaqueAction(hero) {
-  hero.ad *= 1.4;
-  hero.pv *= 0.75;
-}
-
-let random = Math.floor(Math.random() * 3);
-// 3 = boss.length ou manaPossibles.length
-let randomQuestion = Math.floor(Math.random() * 5);
-// 5 = enigmesPrompts.length
-
-// Boss random
-export function randomBoss() {
-  let boss = [Instances.venom, Instances.father, Instances.dio];
-  let bossChoisi = boss[random];
-  console.warn(
-    `Le boss ${bossChoisi.nom} arrive dans l'arène ! PV:${bossChoisi.pv}, AD:${bossChoisi.ad}. Préparez-vous au combat !`
-  );
-  return bossChoisi;
-}
-
-// Mana possibles
-export function randomMana() {
-  let manaPossibles = [7, 9, 11];
-  let mana = manaPossibles[random];
-  return mana;
-}
-
-// Nombre de flèches aléatoires
-export function randomArrows(min, max) {
-  return Math.floor(Math.random() * (max - min) + min);
-}
 
 // Enigmes aléatoires
-export function randomEnigme(bossChoisi) {
+export function randomEnigme() {
   // Boss en dessous de 20% de pv
-  if (bossChoisi.pv <= bossChoisi.pv * 0.2) {
+  if (bossChoisi.pv <= (bossChoisi.pv * 0.2)) {
     // Enigmes possibles
     let enigmesPrompt = [
       `Que vaut le résultat des index 2,5,3,8,7 du mot "refluates"`,
@@ -469,13 +502,53 @@ export function randomEnigme(bossChoisi) {
   }
 }
 
+// Fonction de l'attaque des persos pour chaque tour
+export function bagarre() {
+  setTimeout(() => {
+    tours += 1
+    function attaqueHeros() {
+      // Attaque du guerrier
+      setTimeout(() => {
+        console.log(`${Instances.guerrier.nom} attaque ${bossChoisi.nom}. Il lui inflige ${Instances.guerrier.ad} dégats.`);
+        bossChoisi.pv -= Instances.guerrier.ad
+        console.log(`${bossChoisi.nom} n'a plus que ${bossChoisi.pv} PV`);
+        Instances.guerrier.rage += 1
+        console.log(`La rage de ${Instances.guerrier.nom} augmente d'1 unité`);
+        // Particularité de la rage
+        if (tours % 5 == 0) {
+          console.log(`Oui la rage du guerrier est bien à ${Instances.guerrier.rage}`);
+          Instances.guerrier.rage = 4;
+          Instances.guerrier.ad += Instances.guerrier.ad * 0.25;
+        }
+        if (Instances.guerrier.rage == 4) {
+          Instances.guerrier.ad += Instances.guerrier.ad * 0.25;
+        } else if (tours % 6 == 0) {
+          Instances.guerrier.ad = adHeros[0];
+          Instances.guerrier.rage = 0;
+        }
+        Instances.guerrier.pv = pvHeros[0]
+        Instances.guerrier.ad = adHeros[0]
+      }, 500);
+    }
+    // Attaque du mage
+    setTimeout(() => {
+      
+    }, 1000);
+
+
+
+    attaqueHeros()
+  }, 500);
+}
+
+
 /* ****** DEROULEMENT DU COMBAT ********* */
 export function deroulement() {
   // Nom des héros
   namesHeroes();
   // Insertion balises HTML
   insertHtml();
-  // PV et AD des héros
+  // PV et AD des héros puis combat
   combat(Instances.guerrier);
   combat(Instances.mage);
   combat(Instances.archer);
