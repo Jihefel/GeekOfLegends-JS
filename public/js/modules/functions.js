@@ -95,7 +95,7 @@ function insertHtml() {
 
 let pvHeros = [];
 let adHeros = [];
-export let pvBoss = []
+export let pvBoss = [];
 // Attribution des pv et ad par l'utilisateur
 export function combat(hero) {
   // Pour créer un input number dans l'HTML pour saisir les attributs
@@ -118,7 +118,7 @@ export function combat(hero) {
   input_numberPV.setAttribute("name", `PV de ${hero.nom}`);
   input_numberPV.setAttribute("placeholder", `PV de ${hero.nom}`);
   input_numberPV.setAttribute("min", "10");
-  input_numberPV.setAttribute("max", "290");
+  input_numberPV.setAttribute("max", "299");
   input_numberPV.setAttribute("step", "10");
   input_numberPV.setAttribute("style", "width:8%;display:inline");
   labelPV.setAttribute("for", `PV de ${hero.nom}`);
@@ -130,7 +130,7 @@ export function combat(hero) {
   input_numberAD.setAttribute("name", `AD de ${hero.nom}`);
   input_numberAD.setAttribute("placeholder", `AD de ${hero.nom}`);
   input_numberAD.setAttribute("min", "10");
-  input_numberAD.setAttribute("max", "290");
+  input_numberAD.setAttribute("max", "299");
   input_numberAD.setAttribute("step", "10");
   input_numberAD.setAttribute("style", "width:8%;display:inline");
   labelAD.setAttribute("for", `AD de ${hero.nom}`);
@@ -145,9 +145,18 @@ export function combat(hero) {
   //  Le total des attributs ne doit jamais dépasser total_attributs, il commence à 0
   let total_attributs = 300;
   let total = 0;
-
   // Mise à jour du total
   function updateTotal() {
+    if ((input_numberPV.value == 0 && input_numberAD.value == 300) || input_numberPV.value == "" || (isNaN(input_numberPV.value))) {
+      hero.pv = 1;
+    } else {
+      hero.pv = input_numberPV.value;
+    }
+    if ((input_numberAD.value == 0 && input_numberPV.value == 300) || input_numberAD.value == "" || (isNaN(input_numberAD.value))) {
+      hero.ad = 1;
+    } else {
+      hero.ad = input_numberAD.value;
+    }
     // Total = AD + PV du perso
     total = Number(input_numberPV.value) + Number(input_numberAD.value);
     // Message d'erreur si le total dépasse les 500 max
@@ -304,15 +313,12 @@ export function combat(hero) {
           console.log(
             `${Instances.guerrier.nom} : PV:${Instances.guerrier.pv}, AD:${Instances.guerrier.ad}, Rage:${Instances.guerrier.rage}`
           );
-          console.log(Instances.guerrier);
           console.log(
             `${Instances.mage.nom} : PV:${Instances.mage.pv}, AD:${Instances.mage.ad}, Mana:${Instances.mage.mana}`
           );
-          console.log(Instances.mage);
           console.log(
             `${Instances.archer.nom} : PV:${Instances.archer.pv}, AD: ${Instances.archer.ad}, Flèches:${Instances.archer.arrows}`
           );
-          console.log(Instances.archer);
           h4.style.display = "none";
           message.style.display = "none";
           // Tableau des PV et AD établis par l'utilisateur
@@ -487,15 +493,17 @@ let heroes = [];
 export function randomEnigme() {
   let pv_du_boss_choisi;
   if (bossChoisi.nom == "Venom") {
-    pv_du_boss_choisi = pvBoss[0]
+    pv_du_boss_choisi = pvBoss[0];
   } else if (bossChoisi.nom == "Father") {
-    pv_du_boss_choisi = pvBoss[1]
+    pv_du_boss_choisi = pvBoss[1];
   } else if (bossChoisi.nom == "Dio") {
-    pv_du_boss_choisi = pvBoss[2]
+    pv_du_boss_choisi = pvBoss[2];
   }
   // Enigmes possibles
-  if (bossChoisi.pv <= (pv_du_boss_choisi * 0.20)) {
-    alert(`${bossChoisi.nom} est sur le point de mourir. Il va vous poser une enigme à laquelle vous devez répondre en max 3 essais. Si vous trouvez la réponse à son énigme, vous le terrasserez définitivement, sinon vous mourrez ! Bonne chance.`);
+  if (bossChoisi.pv <= pv_du_boss_choisi * 0.2) {
+    alert(
+      `${bossChoisi.nom} est sur le point de mourir. Il va vous poser une enigme à laquelle vous devez répondre en max 3 essais. Si vous trouvez la réponse à son énigme, vous le terrasserez définitivement, sinon vous mourrez ! Bonne chance.`
+    );
     let enigmesPrompt = [
       `Que vaut le résultat des index 2,5,3,8,7 du mot "refluates"`,
       `Je transforme une plante en une planète. Qui suis-je ?`,
@@ -514,7 +522,6 @@ export function randomEnigme() {
         .toLocaleLowerCase()
         .replace(/\s/g, "")
         .trim();
-      console.log(`Votre réponse est : ${reponseUser}`);
       if (
         reponseUser ===
           enigmesReponse[enigmesPrompt.indexOf(enigmeAsked)] /*Bonus 2 =>*/ ||
@@ -524,7 +531,12 @@ export function randomEnigme() {
       ) {
         // Mort du boss
         bossChoisi.pv = 0;
-        console.log(`Vous avez réussi à tuer ${bossChoisi.nom} !`);
+        console.log(
+          `Vous avez réussi à tuer ${bossChoisi.nom} en trouvant "${
+            enigmesReponse[enigmesPrompt.indexOf(enigmeAsked)]
+          }" qui était bien la bonne réponse à son énigme !`
+        );
+        sleep(100);
         alert(`Vous avez réussi à tuer ${bossChoisi.nom} !`);
         window.location.reload();
         break;
@@ -546,22 +558,22 @@ export function randomEnigme() {
         }
       }
     }
-    while (nbFoisQuestion === 3) {
+    if (nbFoisQuestion === 3) {
       // Mort des héros
+      console.log(
+        `Vous avez malheureusement raté... La bonne réponse était "${
+          enigmesReponse[enigmesPrompt.indexOf(enigmeAsked)]
+        }"`
+      );
       Instances.guerrier.pv = 0;
       Instances.mage.pv = 0;
       Instances.archer.pv = 0;
-      console.log(Instances.guerrier);
-      console.log(Instances.mage);
-      console.log(Instances.archer);
       sleep(100);
       alert("Vous avez échoué. Tous vos héros sont morts...");
       window.location.reload();
-      break;
     }
   }
 }
-
 
 export function attGuerrier() {
   // Attaque du guerrier
@@ -590,8 +602,9 @@ export function attGuerrier() {
   );
   bossChoisi.pv -= Instances.guerrier.ad;
   if (bossChoisi.pv <= 0) {
-    bossChoisi.pv = 0
+    bossChoisi.pv = 0;
     console.log(`${bossChoisi.nom} est sur le point de mourir !`);
+    return;
   }
 
   if (Instances.guerrier.rage < 4) {
@@ -621,8 +634,9 @@ export function attMage() {
   );
   bossChoisi.pv -= Instances.mage.ad;
   if (bossChoisi.pv <= 0) {
-    bossChoisi.pv = 0
+    bossChoisi.pv = 0;
     console.log(`${bossChoisi.nom} est sur le point de mourir !`);
+    return;
   }
   Instances.mage.mana -= 2;
   console.log(
@@ -649,8 +663,9 @@ export function attArcher() {
   );
   bossChoisi.pv -= Instances.archer.ad;
   if (bossChoisi.pv <= 0) {
-    bossChoisi.pv = 0
+    bossChoisi.pv = 0;
     console.log(`${bossChoisi.nom} est sur le point de mourir !`);
+    return;
   }
   Instances.archer.arrows -= 2;
   console.log(
@@ -662,18 +677,14 @@ export function attArcher() {
 }
 
 export function attaqueHeros() {
-  attGuerrier()
+  attGuerrier();
   sleep(1000);
-  
-  
-  attMage()
+
+  attMage();
   sleep(1000);
-  
-  attArcher()
-  if (bossChoisi.pv <= 0) {
-    bossChoisi.pv = 0
-    console.log(`${bossChoisi.nom} est pratiquement mort !`);
-  }
+
+  attArcher();
+  sleep(1000);
   // Boss en dessous de 20% de pv
   randomEnigme();
 }
