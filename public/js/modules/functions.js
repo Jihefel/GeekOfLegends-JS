@@ -589,6 +589,10 @@ export function attGuerrier() {
     `${Instances.guerrier.nom} attaque ${bossChoisi.nom}. Il lui inflige ${Instances.guerrier.ad} points de dégats.`
   );
   bossChoisi.pv -= Instances.guerrier.ad;
+  if (bossChoisi.pv <= 0) {
+    bossChoisi.pv = 0
+    console.log(`${bossChoisi.nom} est sur le point de mourir !`);
+  }
 
   if (Instances.guerrier.rage < 4) {
     Instances.guerrier.rage += 1;
@@ -616,6 +620,10 @@ export function attMage() {
     `${Instances.mage.nom} attaque ${bossChoisi.nom}. Il lui inflige ${Instances.mage.ad} points de dégats.`
   );
   bossChoisi.pv -= Instances.mage.ad;
+  if (bossChoisi.pv <= 0) {
+    bossChoisi.pv = 0
+    console.log(`${bossChoisi.nom} est sur le point de mourir !`);
+  }
   Instances.mage.mana -= 2;
   console.log(
     `${Instances.mage.nom} a utilisé 2 unités de mana. Il ne lui en reste plus que ${Instances.mage.mana} désormais.`
@@ -640,6 +648,10 @@ export function attArcher() {
     `${Instances.archer.nom} attaque ${bossChoisi.nom}. Il lui inflige ${Instances.archer.ad} points de dégats.`
   );
   bossChoisi.pv -= Instances.archer.ad;
+  if (bossChoisi.pv <= 0) {
+    bossChoisi.pv = 0
+    console.log(`${bossChoisi.nom} est sur le point de mourir !`);
+  }
   Instances.archer.arrows -= 2;
   console.log(
     `${Instances.archer.nom} a utilisé 2 flèches. Il ne lui en reste plus que ${Instances.archer.arrows} désormais.`
@@ -653,10 +665,15 @@ export function attaqueHeros() {
   attGuerrier()
   sleep(1000);
   
+  
   attMage()
   sleep(1000);
-
+  
   attArcher()
+  if (bossChoisi.pv <= 0) {
+    bossChoisi.pv = 0
+    console.log(`${bossChoisi.nom} est pratiquement mort !`);
+  }
   // Boss en dessous de 20% de pv
   randomEnigme();
 }
