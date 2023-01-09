@@ -1,11 +1,11 @@
 import * as classes from "./classes.js";
 
-import { randomMana, randomArrows, randomBoss } from "./functions.js";
+import { randomMana, randomArrows } from "./functions.js";
 
 // Instances de Boss
-export let venom = new classes.Boss ("Venom", 100, 40);
-export let father = new classes.Boss ("Father", 100, 30);
-export let dio = new classes.Boss ("Dio", 100, 20);
+export let venom = new classes.Boss ("Venom", 7000, 80);
+export let father = new classes.Boss ("Father", 4000, 60);
+export let dio = new classes.Boss ("Dio", 5000, 70);
 
 // Instance de Guerrier
 export let guerrier = new classes.Guerrier ("", 0, 0, 0);

@@ -360,6 +360,15 @@ export function affrontement() {
   postures();
 }
 
+
+let post_g = document.getElementById("post_g")
+let post_m = document.getElementById("post_m")
+let post_a = document.getElementById("post_a")
+
+let postureChanged1 = false;
+let postureChanged2 = false;
+let postureChanged3 = false;
+
 export function postures() {
   // Guerrier
   document.getElementById("select").style.display = "block";
@@ -368,7 +377,7 @@ export function postures() {
   ).innerText = `Posture de ${Instances.guerrier.nom}`;
   const selPostureGuerrier = document.getElementById("post_g");
 
-  let postureChanged1 = false;
+  
   selPostureGuerrier.addEventListener("change", (event) => {
     if (postureChanged1) {
       // ignore l'événement si la posture a déjà été changée
@@ -398,7 +407,7 @@ export function postures() {
   ).innerText = `Posture de ${Instances.mage.nom}`;
   const selPostureMage = document.getElementById("post_m");
 
-  let postureChanged2 = false;
+  
   selPostureMage.addEventListener("change", (event) => {
     if (postureChanged2) {
       // ignore l'événement si la posture a déjà été changée
@@ -428,7 +437,6 @@ export function postures() {
   ).innerText = `Posture de ${Instances.archer.nom}`;
   const selPostureArcher = document.getElementById("post_a");
 
-  let postureChanged3 = false;
   selPostureArcher.addEventListener("change", (event) => {
     if (postureChanged3) {
       // ignore l'événement si la posture a déjà été changée
@@ -481,6 +489,33 @@ export function postures() {
       selPostureGuerrier.value = "";
       selPostureMage.value = "";
       selPostureArcher.value = "";
+      // Suppression des autres options de posture après tour 1
+      if (tours >= 1) {
+        // Les options sont set en normal pour ne plus rien changé aux stats après les changements dû aux postures (sauf cas de la rage)
+        selPostureGuerrier.value = "normal";
+        selPostureMage.value = "normal";
+        selPostureArcher.value = "normal";
+        // Impossible de sélectionner une autre posture, le bouton prochain tour est donc dispo
+        postureChanged1 = true;
+        postureChanged2 = true;
+        postureChanged3 = true;
+          // Pour guerrier
+          for (let index = 1; index <= post_g.length+1; index++) {
+            post_g.remove(1);
+            document.getElementById("label_posture_guerrier").innerText = `${Instances.guerrier.nom}`
+          }
+          // Pour mage
+          for (let index = 1; index <= post_m.length+1; index++) {
+            post_m.remove(1);
+            document.getElementById("label_posture_mage").innerText = `${Instances.mage.nom}`
+          }
+          // Pour guerrier
+          for (let index = 1; index <= post_a.length+1; index++) {
+            post_a.remove(1);
+            document.getElementById("label_posture_archer").innerText = `${Instances.archer.nom}`
+          }
+      
+      }
       // FONCTION DE POKE CHACUN SON TOUR
       bagarre();
     }
@@ -488,6 +523,57 @@ export function postures() {
 }
 
 let heroes = [];
+
+export function attaqueBoss() {
+  let random_pour_hero = Math.floor(Math.random() * heroes.length);
+  let randomHero = heroes[random_pour_hero];
+  let trueHero
+  switch (randomHero.nom) {
+    case Instances.guerrier.nom:
+      trueHero = Instances.guerrier
+      break;
+    case Instances.mage.nom:
+      trueHero = Instances.mage
+      break;
+    case Instances.archer.nom:
+      trueHero = Instances.archer
+      break;
+  
+    default:
+      break;
+  }
+  trueHero.pv -= bossChoisi.ad
+  // Quand le héros meurt, son select de posture est désactivé
+  if (trueHero.pv <= 0) {
+    trueHero.pv = 0;
+    console.log(`${bossChoisi.nom} a tué ${trueHero.nom} !`);
+    switch (trueHero) {
+      case Instances.guerrier:
+        post_g.setAttribute("disabled",true);
+        break;
+        case Instances.mage:
+        post_m.setAttribute("disabled",true);
+        break;
+        case Instances.archer:
+        post_a.setAttribute("disabled",true);
+        break;
+    
+      default:
+        break;
+    }
+  }
+  // Si le héro attaqué est encore en vie, afficher ses pv restant
+  if (trueHero.pv > 0) {
+    console.log(`${bossChoisi.nom} attaque ${trueHero.nom}. ${trueHero.nom} n'a plus que ${trueHero.pv} PV.`);
+  }
+  // Tous les héros sont morts
+  if (Instances.guerrier.pv == 0 && Instances.mage.pv == 0 && Instances.archer.pv == 0) {
+    sleep(100);
+      alert("Vous avez échoué. Tous vos héros sont morts...");
+      window.location.reload();
+  }
+  return trueHero;
+}
 
 // Enigmes aléatoires
 export function randomEnigme() {
@@ -577,16 +663,21 @@ export function randomEnigme() {
 
 export function attGuerrier() {
   // Attaque du guerrier
+  if (Instances.guerrier.pv <= 0 ) {
+    heroes.splice(heroes.indexOf(Instances.guerrier), 1)
+      return;
+    }
+
   if (Instances.guerrier.rage > 4) {
     Instances.guerrier.rage = 0;
-    Instances.guerrier.ad = adHeros[0];
+    Instances.guerrier.ad -= (Instances.guerrier.ad * 0.2);
     console.log(
-      `La rage de ${Instances.guerrier.nom} est retombée à ${Instances.guerrier.rage}.`
+      `La rage de ${Instances.guerrier.nom} est retombée à ${Instances.guerrier.rage} et son AD à ${Instances.guerrier.ad}.`
     );
   }
   if (Instances.guerrier.rage == 4) {
     Instances.guerrier.rage = 4;
-    Instances.guerrier.ad += Instances.guerrier.ad * 0.25;
+    Instances.guerrier.ad += (Instances.guerrier.ad * 0.25);
     console.log(
       `${Instances.guerrier.nom} est empli de rage (${
         Instances.guerrier.rage
@@ -614,19 +705,19 @@ export function attGuerrier() {
     );
   }
   console.log(`${bossChoisi.nom} n'a plus que ${bossChoisi.pv} PV`);
-  Instances.guerrier.pv = pvHeros[0];
-  Instances.guerrier.ad = adHeros[0];
 }
 
 export function attMage() {
+  if (Instances.mage.pv <= 0 ) {
+    heroes.splice(heroes.indexOf(Instances.mage), 1)
+    return;
+  }
   // Attaque du mage
   if (Instances.mage.mana < 2) {
     console.log(
-      `${Instances.mage.nom} n'a pas assez de mana (${Instances.mage.mana}) pour attaquer ${bossChoisi.nom}. Il passe son tour.`
+      `${Instances.mage.nom} n'a pas assez de mana (${Instances.mage.mana}) pour attaquer ${bossChoisi.nom}. Il passe son tour pour en récupérer 7 points au suivant.`
     );
     Instances.mage.mana += 7;
-    Instances.mage.pv = pvHeros[1];
-    Instances.mage.ad = adHeros[1];
     return;
   }
   console.log(
@@ -643,19 +734,19 @@ export function attMage() {
     `${Instances.mage.nom} a utilisé 2 unités de mana. Il ne lui en reste plus que ${Instances.mage.mana} désormais.`
   );
   console.log(`${bossChoisi.nom} n'a plus que ${bossChoisi.pv} PV.`);
-  Instances.mage.pv = pvHeros[1];
-  Instances.mage.ad = adHeros[1];
 }
 
 export function attArcher() {
+  if (Instances.archer.pv <= 0 ) {
+    heroes.splice(heroes.indexOf(Instances.archer), 1)
+    return;
+  }
   // Attaque de l'archer
   if (Instances.archer.arrows < 2) {
     console.log(
-      `${Instances.archer.nom} n'a plus assez de flèches dans son carquois (${Instances.archer.arrows}) pour attaquer ${bossChoisi.nom}. Il passe son tour.`
+      `${Instances.archer.nom} n'a plus assez de flèches dans son carquois (${Instances.archer.arrows}) pour attaquer ${bossChoisi.nom}. Il passe son tour pour en récupérer 6 au suivant.`
     );
     Instances.archer.arrows += 6;
-    Instances.archer.pv = pvHeros[2];
-    Instances.archer.ad = adHeros[2];
     return;
   }
   console.log(
@@ -672,8 +763,6 @@ export function attArcher() {
     `${Instances.archer.nom} a utilisé 2 flèches. Il ne lui en reste plus que ${Instances.archer.arrows} désormais.`
   );
   console.log(`${bossChoisi.nom} n'a plus que ${bossChoisi.pv} PV.`);
-  Instances.archer.pv = pvHeros[2];
-  Instances.archer.ad = adHeros[2];
 }
 
 export function attaqueHeros() {
@@ -701,12 +790,10 @@ function sleep(milliseconds) {
 // Fonction de l'attaque des persos pour chaque tour
 export function bagarre() {
   console.warn(`Début du tour ${tours}`);
-  h4.innerText = "Sélectionnez les postures de vos héros";
-  h4.style.display = "block";
   tours += 1;
   sleep(500);
   attaqueHeros();
-  // attaqueboss()
+  attaqueBoss()
 }
 
 /* ****** DEROULEMENT DU COMBAT ********* */
