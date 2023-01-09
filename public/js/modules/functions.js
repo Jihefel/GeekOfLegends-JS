@@ -1,5 +1,7 @@
 import * as Instances from "./instances.js";
 
+document.body.style.ba
+
 // Attribution des noms aux héros
 export function namesHeroes() {
   // Nom du Guerrier
@@ -417,7 +419,7 @@ export function postures() {
         progress_a.setAttribute("id","progress_pv_a")
         progress_a.setAttribute("max",`${pvHeros[2]}`)
         progress_a.setAttribute("value",`${Instances.archer.pv}`)
-        progress_a.style.accentColor ="yellow"
+        progress_a.style.accentColor ="darkgold"
         document.getElementById("p-a").style.display ="block"
       // Barre de vie Boss
       if (bossChoisi.nom == "Venom") {
