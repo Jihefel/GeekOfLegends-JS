@@ -89,9 +89,11 @@ message.setAttribute("id", "message");
 let progress_g = document.createElement("progress");
 let progress_m = document.createElement("progress");
 let progress_a = document.createElement("progress");
+let progress_b = document.createElement("progress");
 let label_progress_g = document.createElement("label");
 let label_progress_m = document.createElement("label");
 let label_progress_a = document.createElement("label");
+let label_progress_b = document.createElement("label");
 
 function insertHtml() {
   document.body.prepend(h4);
@@ -377,6 +379,68 @@ let postureChanged2 = false;
 let postureChanged3 = false;
 
 export function postures() {
+  // BARRES DE VIE
+      // Barre de vie Guerrier
+        // Label
+        document.getElementById("p-g").appendChild(label_progress_g)
+        label_progress_g.setAttribute("for","progress_pv_g")
+        label_progress_g.setAttribute("id","label_pv_g")
+        label_progress_g.innerText = `PV de ${Instances.guerrier.nom} (${Math.floor(Instances.guerrier.pv/pvHeros[0])*100}%) : `
+        // Progress bar
+        document.getElementById("p-g").appendChild(progress_g)
+        progress_g.setAttribute("id","progress_pv_g")
+        progress_g.setAttribute("max",`${pvHeros[0]}`)
+        progress_g.setAttribute("value",`${Instances.guerrier.pv}`)
+        progress_g.style.accentColor ="green"
+        document.getElementById("p-g").style.display ="block"
+      // Barre de vie Mage
+        // Label
+        document.getElementById("p-m").appendChild(label_progress_m)
+        label_progress_m.setAttribute("for","progress_pv_m")
+        label_progress_m.setAttribute("id","label_pv_m")
+        label_progress_m.innerText = `PV de ${Instances.mage.nom} (${Math.floor(Instances.mage.pv/pvHeros[1])*100}%) : `
+        // Progress bar
+        document.getElementById("p-m").appendChild(progress_m)
+        progress_m.setAttribute("id","progress_pv_m")
+        progress_m.setAttribute("max",`${pvHeros[1]}`)
+        progress_m.setAttribute("value",`${Instances.mage.pv}`)
+        progress_m.style.accentColor ="blue"
+        document.getElementById("p-m").style.display ="block"
+      // Barre de vie Archer
+        // Label
+        document.getElementById("p-a").appendChild(label_progress_a)
+        label_progress_a.setAttribute("for","progress_pv_a")
+        label_progress_a.setAttribute("id","label_pv_a")
+        label_progress_a.innerText = `PV de ${Instances.archer.nom} (${Math.floor(Instances.archer.pv/pvHeros[2])*100}%) : `
+        // Progress bar
+        document.getElementById("p-a").appendChild(progress_a)
+        progress_a.setAttribute("id","progress_pv_a")
+        progress_a.setAttribute("max",`${pvHeros[2]}`)
+        progress_a.setAttribute("value",`${Instances.archer.pv}`)
+        progress_a.style.accentColor ="yellow"
+        document.getElementById("p-a").style.display ="block"
+      // Barre de vie Boss
+      if (bossChoisi.nom == "Venom") {
+        pv_du_boss_choisi = pvBoss[0];
+      } else if (bossChoisi.nom == "Father") {
+        pv_du_boss_choisi = pvBoss[1];
+      } else if (bossChoisi.nom == "Dio") {
+        pv_du_boss_choisi = pvBoss[2];
+      }
+        // Label
+        document.getElementById("p-b").appendChild(label_progress_b)
+        label_progress_b.setAttribute("for","progress_pv_b")
+        label_progress_b.setAttribute("id","label_pv_b")
+        label_progress_b.innerText = `PV de ${bossChoisi.nom} (${Math.floor(bossChoisi.pv/pv_du_boss_choisi)*100}%) : `
+        // Progress bar
+        document.getElementById("p-b").appendChild(progress_b)
+        progress_b.setAttribute("id","progress_pv_b")
+        progress_b.setAttribute("max",`${pv_du_boss_choisi}`)
+        progress_b.setAttribute("value",`${bossChoisi.pv}`)
+        progress_b.style.accentColor ="red"
+        document.getElementById("p-b").style.display ="block"
+
+
   // Guerrier
   document.getElementById("select").style.display = "block";
   document.getElementById(
@@ -527,7 +591,6 @@ export function postures() {
             post_a.remove(1);
             document.getElementById("label_posture_archer").innerText = `${Instances.archer.nom}`
           }
-          
       }
       // FONCTION DE POKE CHACUN SON TOUR
       bagarre();
@@ -601,6 +664,7 @@ export function attaqueBoss() {
 }
 
 let pv_du_boss_choisi;
+
 // Enigmes aléatoires
 export function randomEnigme() {
   if (bossChoisi.nom == "Venom") {
@@ -836,12 +900,87 @@ export function bagarre() {
   attaqueHeros();
   attaqueBoss()
   if (bossChoisi.pv <= 0) {
+    // BARRES DE VIE
+      // Barre de vie Guerrier
+        // Label
+        label_progress_g.innerText = `PV de ${Instances.guerrier.nom} (${((Instances.guerrier.pv/pvHeros[0])*100).toFixed(0)}%) : `
+        // Progress bar
+        progress_g.setAttribute("max",`${pvHeros[0]}`)
+        progress_g.setAttribute("value",`${Instances.guerrier.pv}`)
+      // Barre de vie Mage
+        // Label
+        label_progress_m.innerText = `PV de ${Instances.mage.nom} (${((Instances.mage.pv/pvHeros[1])*100).toFixed(0)}%) : `
+        // Progress bar
+        progress_m.setAttribute("max",`${pvHeros[1]}`)
+        progress_m.setAttribute("value",`${Instances.mage.pv}`)
+      // Barre de vie Archer
+        // Label
+        label_progress_a.innerText = `PV de ${Instances.archer.nom} (${((Instances.archer.pv/pvHeros[2])*100).toFixed(0)}%) : `
+        // Progress bar
+        progress_a.setAttribute("max",`${pvHeros[2]}`)
+        progress_a.setAttribute("value",`${Instances.archer.pv}`)
+      // Barre de vie Boss
+        // Label
+        label_progress_b.innerText = `PV de ${bossChoisi.nom} (${((bossChoisi.pv/pv_du_boss_choisi)*100).toFixed(0)}%) : `
+        // Progress bar
+        progress_b.setAttribute("max",`${pv_du_boss_choisi}`)
+        progress_b.setAttribute("value",`${bossChoisi.pv}`)
     console.warn(`Fin de la partie`);
     return
   } else if (bossChoisi.pv > 0) {
-  console.warn(`Fin du tour ${tours-1}`);
-  return
+    // BARRES DE VIE
+      // Barre de vie Guerrier
+        // Label
+        label_progress_g.innerText = `PV de ${Instances.guerrier.nom} (${((Instances.guerrier.pv/pvHeros[0])*100).toFixed(0)}%) : `
+        // Progress bar
+        progress_g.setAttribute("max",`${pvHeros[0]}`)
+        progress_g.setAttribute("value",`${Instances.guerrier.pv}`)
+      // Barre de vie Mage
+        // Label
+        label_progress_m.innerText = `PV de ${Instances.mage.nom} (${((Instances.mage.pv/pvHeros[1])*100).toFixed(0)}%) : `
+        // Progress bar
+        progress_m.setAttribute("max",`${pvHeros[1]}`)
+        progress_m.setAttribute("value",`${Instances.mage.pv}`)
+      // Barre de vie Archer
+        // Label
+        label_progress_a.innerText = `PV de ${Instances.archer.nom} (${((Instances.archer.pv/pvHeros[2])*100).toFixed(0)}%) : `
+        // Progress bar
+        progress_a.setAttribute("max",`${pvHeros[2]}`)
+        progress_a.setAttribute("value",`${Instances.archer.pv}`)
+      // Barre de vie Boss
+        // Label
+        label_progress_b.innerText = `PV de ${bossChoisi.nom} (${((bossChoisi.pv/pv_du_boss_choisi)*100).toFixed(0)}%) : `
+        // Progress bar
+        progress_b.setAttribute("max",`${pv_du_boss_choisi}`)
+        progress_b.setAttribute("value",`${bossChoisi.pv}`)
+    console.warn(`Fin du tour ${tours-1}`);
+    return
   } else {
+    // BARRES DE VIE
+      // Barre de vie Guerrier
+        // Label
+        label_progress_g.innerText = `PV de ${Instances.guerrier.nom} (${((Instances.guerrier.pv/pvHeros[0])*100).toFixed(0)}%) : `
+        // Progress bar
+        progress_g.setAttribute("max",`${pvHeros[0]}`)
+        progress_g.setAttribute("value",`${Instances.guerrier.pv}`)
+      // Barre de vie Mage
+        // Label
+        label_progress_m.innerText = `PV de ${Instances.mage.nom} (${((Instances.mage.pv/pvHeros[1])*100).toFixed(0)}%) : `
+        // Progress bar
+        progress_m.setAttribute("max",`${pvHeros[1]}`)
+        progress_m.setAttribute("value",`${Instances.mage.pv}`)
+      // Barre de vie Archer
+        // Label
+        label_progress_a.innerText = `PV de ${Instances.archer.nom} (${((Instances.archer.pv/pvHeros[2])*100).toFixed(0)}%) : `
+        // Progress bar
+        progress_a.setAttribute("max",`${pvHeros[2]}`)
+        progress_a.setAttribute("value",`${Instances.archer.pv}`)
+      // Barre de vie Boss
+        // Label
+        label_progress_b.innerText = `PV de ${bossChoisi.nom} (${((bossChoisi.pv/pv_du_boss_choisi)*100).toFixed(0)}%) : `
+        // Progress bar
+        progress_b.setAttribute("max",`${pv_du_boss_choisi}`)
+        progress_b.setAttribute("value",`${bossChoisi.pv}`)
     console.warn(`Fin de la partie`);
     return
   }
