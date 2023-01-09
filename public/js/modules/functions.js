@@ -46,14 +46,14 @@ export function namesHeroes() {
 
 // Methode defense des héros
 export function defenseAction(hero) {
-  hero.ad *= 0.5;
-  hero.pv *= 2.5;
+  hero.ad *= 0.50;
+  hero.pv *= 2.50;
   // Chances d'être attaqué *2
 }
 
 // Méthode attaque des héros
 export function attaqueAction(hero) {
-  hero.ad *= 1.4;
+  hero.ad *= 1.40;
   hero.pv *= 0.75;
 }
 
@@ -61,6 +61,8 @@ let random = Math.floor(Math.random() * 3);
 // 3 = boss.length ou manaPossibles.length
 let randomQuestion = Math.floor(Math.random() * 5);
 // 5 = enigmesPrompts.length
+
+const bossAudio = new Audio("../../public/audio/mixkit-brass-strings-suspense-671.mp3")
 
 // Boss random
 let bossChoisi;
@@ -96,6 +98,10 @@ let label_progress_g = document.createElement("label");
 let label_progress_m = document.createElement("label");
 let label_progress_a = document.createElement("label");
 let label_progress_b = document.createElement("label");
+let img_g = document.createElement("img");
+let img_m = document.createElement("img");
+let img_a = document.createElement("img");
+let img_b = document.createElement("img");
 
 function insertHtml() {
   document.body.prepend(h4);
@@ -360,15 +366,30 @@ export function combat(hero) {
   prepCombat();
 }
 
+const combatAudio = new Audio("../../public/audio/mixkit-cinematic-deep-drums-suspense-swell-682.mp3")
 let tours = 1;
 export function affrontement() {
+  bossAudio.play()
   setTimeout(() => {
     alert(
       `Tuez ${bossChoisi.nom} pour remporter la partie ! Pour commencer, donnez une posture à vos héros.`
     );
-  }, 10);
+  }, 50);
   randomBoss();
   postures();
+  // Audio de combat en boucle
+  if (typeof combatAudio.loop == 'boolean')
+{
+  combatAudio.loop = true;
+}
+else
+{
+  combatAudio.addEventListener('ended', function() {
+        this.currentTime = 0;
+        this.play();
+    }, false);
+}
+combatAudio.play();
 }
 
 
@@ -383,6 +404,10 @@ let postureChanged3 = false;
 export function postures() {
   // BARRES DE VIE
       // Barre de vie Guerrier
+        // Image
+        document.getElementById("p-g").appendChild(img_g)
+        img_g.src = "./public/img/warrior.png"
+        img_g.setAttribute("alt", "warrior");
         // Label
         document.getElementById("p-g").appendChild(label_progress_g)
         label_progress_g.setAttribute("for","progress_pv_g")
@@ -394,8 +419,15 @@ export function postures() {
         progress_g.setAttribute("max",`${pvHeros[0]}`)
         progress_g.setAttribute("value",`${Instances.guerrier.pv}`)
         progress_g.style.accentColor ="green"
-        document.getElementById("p-g").style.display ="block"
+        // Style section
+        document.getElementById("p-g").style.display ="flex"
+        document.getElementById("p-g").style.flexDirection ="column"
+        document.getElementById("p-g").style.alignItems ="center"
       // Barre de vie Mage
+        // Image
+        document.getElementById("p-m").appendChild(img_m)
+        img_m.src = "./public/img/mage.png"
+        img_m.setAttribute("alt", "mage");
         // Label
         document.getElementById("p-m").appendChild(label_progress_m)
         label_progress_m.setAttribute("for","progress_pv_m")
@@ -407,8 +439,15 @@ export function postures() {
         progress_m.setAttribute("max",`${pvHeros[1]}`)
         progress_m.setAttribute("value",`${Instances.mage.pv}`)
         progress_m.style.accentColor ="blue"
-        document.getElementById("p-m").style.display ="block"
+        // Style section
+        document.getElementById("p-m").style.display ="flex"
+        document.getElementById("p-m").style.flexDirection ="column"
+        document.getElementById("p-m").style.alignItems ="center"
       // Barre de vie Archer
+        // Image
+        document.getElementById("p-a").appendChild(img_a)
+        img_a.src = "./public/img/archer.png"
+        img_a.setAttribute("alt", "archer");
         // Label
         document.getElementById("p-a").appendChild(label_progress_a)
         label_progress_a.setAttribute("for","progress_pv_a")
@@ -420,8 +459,17 @@ export function postures() {
         progress_a.setAttribute("max",`${pvHeros[2]}`)
         progress_a.setAttribute("value",`${Instances.archer.pv}`)
         progress_a.style.accentColor ="gold"
-        document.getElementById("p-a").style.display ="block"
+        // Style section
+        document.getElementById("p-a").style.display ="flex"
+        document.getElementById("p-a").style.flexDirection ="column"
+        document.getElementById("p-a").style.alignItems ="center"
       // Barre de vie Boss
+        // Image
+        document.getElementById("p-b").appendChild(img_b)
+        img_b.src = "./public/img/boss.png"
+        img_b.setAttribute("alt", "boss");
+
+        // De quel boss s'agit-il ? 
       if (bossChoisi.nom == "Venom") {
         pv_du_boss_choisi = pvBoss[0];
       } else if (bossChoisi.nom == "Father") {
@@ -440,11 +488,14 @@ export function postures() {
         progress_b.setAttribute("max",`${pv_du_boss_choisi}`)
         progress_b.setAttribute("value",`${bossChoisi.pv}`)
         progress_b.style.accentColor ="red"
-        document.getElementById("p-b").style.display ="block"
+        // Style section
+        document.getElementById("p-b").style.display ="flex"
+        document.getElementById("p-b").style.flexDirection ="column"
+        document.getElementById("p-b").style.alignItems ="center"
 
 
   // Guerrier
-  document.getElementById("select").style.display = "block";
+  document.getElementById("select").style.display = "flex";
   document.getElementById(
     "label_posture_guerrier"
   ).innerText = `Posture de ${Instances.guerrier.nom}`;
@@ -639,12 +690,18 @@ export function attaqueBoss() {
     console.log(`${bossChoisi.nom} a tué ${trueHero.nom} !`);
     switch (trueHero) {
       case Instances.guerrier:
+        document.getElementById("label_posture_guerrier").innerHTML = "&#x1FAA6;"
+        document.getElementById("label_posture_guerrier").style.fontSize = "2rem"
         post_g.setAttribute("disabled",true);
         break;
-        case Instances.mage:
+      case Instances.mage:
+        document.getElementById("label_posture_mage").innerHTML = "&#x1FAA6;"
+        document.getElementById("label_posture_mage").style.fontSize = "2rem"
         post_m.setAttribute("disabled",true);
         break;
-        case Instances.archer:
+      case Instances.archer:
+        document.getElementById("label_posture_archer").innerHTML = "&#x1FAA6;"
+        document.getElementById("label_posture_archer").style.fontSize = "2rem"
         post_a.setAttribute("disabled",true);
         break;
     
@@ -756,6 +813,8 @@ export function randomEnigme() {
 export function attGuerrier() {
   // Attaque du guerrier
   if (Instances.guerrier.pv <= 0 ) {
+    document.getElementById("label_posture_guerrier").innerHTML = "&#x1FAA6;"
+    document.getElementById("label_posture_guerrier").style.fontSize = "2rem"
     heroes.splice(heroes.indexOf(Instances.guerrier), 1)
       return;
     }
@@ -801,6 +860,8 @@ export function attGuerrier() {
 
 export function attMage() {
   if (Instances.mage.pv <= 0 ) {
+    document.getElementById("label_posture_mage").innerHTML = "&#x1FAA6;"
+    document.getElementById("label_posture_mage").style.fontSize = "2rem"
     heroes.splice(heroes.indexOf(Instances.mage), 1)
     return;
   }
@@ -830,6 +891,8 @@ export function attMage() {
 
 export function attArcher() {
   if (Instances.archer.pv <= 0 ) {
+    document.getElementById("label_posture_archer").innerHTML = "&#x1FAA6;"
+    document.getElementById("label_posture_archer").style.fontSize = "2rem"
     heroes.splice(heroes.indexOf(Instances.archer), 1)
     return;
   }

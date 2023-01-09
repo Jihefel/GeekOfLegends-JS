@@ -15,38 +15,46 @@
         <br>
         <section id="ad"></section>
         <section id="select" style="display: none;">
-            <label for="post_g" id="label_posture_guerrier"></label>
-            <select name="guerrier" id="post_g">
-                <option value=""></option>
-                <option value="attaque">Attaque</option>
-                <option value="defense">Défense</option>
-                <option value="normal">Normal</option>
-            </select>
-            <label for="post_m" id="label_posture_mage"></label>
-            <select name="mage" id="post_m">
-                <option value=""></option>
-                <option value="attaque">Attaque</option>
-                <option value="defense">Défense</option>
-                <option value="normal">Normal</option>
-            </select>
-            <label for="post_a" id="label_posture_archer"></label>
-            <select name="mage" id="post_a">
-                <option value=""></option>
-                <option value="attaque">Attaque</option>
-                <option value="defense">Défense</option>
-                <option value="normal">Normal</option>
-            </select>
+            <div id="guerrier">
+                <label for="post_g" id="label_posture_guerrier"></label>
+                <select name="guerrier" id="post_g">
+                    <option value=""></option>
+                    <option value="attaque">Attaque</option>
+                    <option value="defense">Défense</option>
+                    <option value="normal">Normal</option>
+                </select>
+            </div>
+            <div id="mage">
+                <label for="post_m" id="label_posture_mage"></label>
+                <select name="mage" id="post_m">
+                    <option value=""></option>
+                    <option value="attaque">Attaque</option>
+                    <option value="defense">Défense</option>
+                    <option value="normal">Normal</option>
+                </select>
+            </div>
+            <div id="archer">
+                <label for="post_a" id="label_posture_archer"></label>
+                <select name="mage" id="post_a">
+                    <option value=""></option>
+                    <option value="attaque">Attaque</option>
+                    <option value="defense">Défense</option>
+                    <option value="normal">Normal</option>
+                </select>
+            </div>
         </section>
         <br>
+        <br>
         <button id="tour" style="display: none;">Prochain tour</button>
+        <section id="barresVie">
+            <section id="p-g" style="display: none;"><br></section>
 
-        <section id="p-g" style="display: none;"><br></section>
+            <section id="p-m" style="display: none;"><br></section>
 
-        <section id="p-m" style="display: none;"><br></section>
+            <section id="p-a" style="display: none;"><br></section>
 
-        <section id="p-a" style="display: none;"><br></section>
-
-        <section id="p-b" style="display: none;"><br></section>
+            <section id="p-b" style="display: none;"><br></section>
+        </section>
     </div>
 </body>
 <script src="./public/js/main.js" type="module"></script>
