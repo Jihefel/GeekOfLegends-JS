@@ -407,7 +407,8 @@ export function postures() {
         // Image
         document.getElementById("p-g").appendChild(img_g)
         img_g.src = "./public/img/warrior.png"
-        img_g.setAttribute("alt", "warrior");
+        img_g.setAttribute("alt","warrior");
+        img_g.setAttribute("id","img_g");
         // Label
         document.getElementById("p-g").appendChild(label_progress_g)
         label_progress_g.setAttribute("for","progress_pv_g")
@@ -427,7 +428,8 @@ export function postures() {
         // Image
         document.getElementById("p-m").appendChild(img_m)
         img_m.src = "./public/img/mage.png"
-        img_m.setAttribute("alt", "mage");
+        img_m.setAttribute("alt","mage");
+        img_m.setAttribute("id","img_m");
         // Label
         document.getElementById("p-m").appendChild(label_progress_m)
         label_progress_m.setAttribute("for","progress_pv_m")
@@ -447,7 +449,8 @@ export function postures() {
         // Image
         document.getElementById("p-a").appendChild(img_a)
         img_a.src = "./public/img/archer.png"
-        img_a.setAttribute("alt", "archer");
+        img_a.setAttribute("alt","archer");
+        img_a.setAttribute("id","img_a");
         // Label
         document.getElementById("p-a").appendChild(label_progress_a)
         label_progress_a.setAttribute("for","progress_pv_a")
@@ -468,7 +471,7 @@ export function postures() {
         document.getElementById("p-b").appendChild(img_b)
         img_b.src = "./public/img/boss.png"
         img_b.setAttribute("alt", "boss");
-
+        img_b.setAttribute("id","img_a");
         // De quel boss s'agit-il ? 
       if (bossChoisi.nom == "Venom") {
         pv_du_boss_choisi = pvBoss[0];
@@ -691,17 +694,20 @@ export function attaqueBoss() {
     switch (trueHero) {
       case Instances.guerrier:
         document.getElementById("label_posture_guerrier").innerHTML = "&#x1FAA6;"
-        document.getElementById("label_posture_guerrier").style.fontSize = "2rem"
+        document.getElementById("label_posture_guerrier").style.fontSize = "2rem" 
+        document.getElementById("img_g").setAttribute("style","opacity:50%")
         post_g.setAttribute("disabled",true);
         break;
       case Instances.mage:
         document.getElementById("label_posture_mage").innerHTML = "&#x1FAA6;"
         document.getElementById("label_posture_mage").style.fontSize = "2rem"
+        document.getElementById("img_m").setAttribute("style","opacity:50%")
         post_m.setAttribute("disabled",true);
         break;
       case Instances.archer:
         document.getElementById("label_posture_archer").innerHTML = "&#x1FAA6;"
         document.getElementById("label_posture_archer").style.fontSize = "2rem"
+        document.getElementById("img_a").setAttribute("style","opacity:50%")
         post_a.setAttribute("disabled",true);
         break;
     
@@ -815,6 +821,7 @@ export function attGuerrier() {
   if (Instances.guerrier.pv <= 0 ) {
     document.getElementById("label_posture_guerrier").innerHTML = "&#x1FAA6;"
     document.getElementById("label_posture_guerrier").style.fontSize = "2rem"
+    document.getElementById("img_g").setAttribute("style","opacity:50%")
     heroes.splice(heroes.indexOf(Instances.guerrier), 1)
       return;
     }
@@ -862,6 +869,7 @@ export function attMage() {
   if (Instances.mage.pv <= 0 ) {
     document.getElementById("label_posture_mage").innerHTML = "&#x1FAA6;"
     document.getElementById("label_posture_mage").style.fontSize = "2rem"
+    document.getElementById("img_m").setAttribute("style","opacity:50%")
     heroes.splice(heroes.indexOf(Instances.mage), 1)
     return;
   }
@@ -893,6 +901,7 @@ export function attArcher() {
   if (Instances.archer.pv <= 0 ) {
     document.getElementById("label_posture_archer").innerHTML = "&#x1FAA6;"
     document.getElementById("label_posture_archer").style.fontSize = "2rem"
+    document.getElementById("img_a").setAttribute("style","opacity:50%")
     heroes.splice(heroes.indexOf(Instances.archer), 1)
     return;
   }

@@ -36,7 +36,7 @@ select {
   border-radius: 5px;
   outline: none;
   border: 2px solid #481c83;
-  color: #7d4abe;
+  color: #a77df2;
   background-color: #0a0822;
 }
 
@@ -58,12 +58,17 @@ button {
   margin-top: 5px;
   margin-bottom: 5px;
   box-shadow: 0 4px rgb(69, 37, 112);
+  padding: 10px 25px 10px 25px;
+  color: white;
+  border-radius: 50px;
+  font-size: 1rem;
 }
 
 button:hover {
   background-color: rgb(0, 0, 0);
   color: #a77df2;
-  box-shadow: 0 5px #a87df2a6;
+  box-shadow: 0 5px #d3baffa6;
+  cursor: pointer;
 }
 
 button:active {
@@ -103,6 +108,7 @@ img {
   font-size: 1rem;
 }
 
+
 #guerrier, #mage, #archer {
     backdrop-filter: blur(3px);
     border-radius: 10px;
@@ -111,9 +117,18 @@ img {
 #label_posture_guerrier, #label_posture_mage, #label_posture_archer {
     text-shadow: 0 0px 10px black;
     font-size: 1.2rem;
-}
-
-option {
+  }
+  
+  option {
     color: #9065c7;
     font-size: 1rem;
+  }
+  
+  #message {
+    color: white;
+    text-shadow: 0 0px 10px black;
+}
+
+#post_g:hover, #post_m:hover, #post_a:hover {
+  cursor: pointer;
 }
